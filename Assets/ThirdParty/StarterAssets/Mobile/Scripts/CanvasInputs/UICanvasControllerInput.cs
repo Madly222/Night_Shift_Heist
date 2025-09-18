@@ -7,7 +7,8 @@ namespace StarterAssets
 
         [Header("Output")]
         public StarterAssetsInputs starterAssetsInputs;
-
+        
+        private bool _isCrouching;
         public void VirtualMoveInput(Vector2 virtualMoveDirection)
         {
             starterAssetsInputs.MoveInput(virtualMoveDirection);
@@ -26,6 +27,13 @@ namespace StarterAssets
         public void VirtualSprintInput(bool virtualSprintState)
         {
             starterAssetsInputs.SprintInput(virtualSprintState);
+        }
+        
+        public void VirtualCrouchInput(bool virtualCrouchInput)
+        {
+            if (!virtualCrouchInput) return;
+            _isCrouching = !_isCrouching;
+            starterAssetsInputs.CrouchInput(_isCrouching);
         }
         
     }

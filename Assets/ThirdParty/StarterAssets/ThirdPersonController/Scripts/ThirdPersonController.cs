@@ -17,6 +17,10 @@ namespace StarterAssets
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
+        
+        [Tooltip("Crouch speed of the character in m/s")]
+        public float CrouchSpeed = 1.0f;
+        private bool _inCrouchAnimation;
 
         [Tooltip("Sprint speed of the character in m/s")]
         public float SprintSpeed = 5.335f;
@@ -156,6 +160,7 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            Crouch();
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -214,8 +219,13 @@ namespace StarterAssets
         private void Move()
         {
             // set target speed based on move speed, sprint speed and if sprint is pressed
-            float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-
+            float targetSpeed;
+            if (_input.crouch)
+                targetSpeed = CrouchSpeed;
+            else if( _input.sprint)
+                targetSpeed = SprintSpeed;
+            else
+                targetSpeed = MoveSpeed;
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
             // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
@@ -279,6 +289,19 @@ namespace StarterAssets
             }
         }
 
+        private void Crouch()
+        {
+            float currentWeight = _animator.GetLayerWeight(1);
+            float targetWeight = _input.crouch ? 1f : 0f;
+
+            float newWeight = Mathf.MoveTowards(
+                currentWeight,
+                targetWeight,
+                4f * Time.deltaTime //enter and exit crouch animation speed
+            );
+
+            _animator.SetLayerWeight(1, newWeight);
+        }
         private void JumpAndGravity()
         {
             if (Grounded)
