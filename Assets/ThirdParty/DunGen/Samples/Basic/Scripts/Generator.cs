@@ -95,7 +95,7 @@ namespace DunGen.Demo
 			DungeonGenerator.Generate();
 		}
 
-		private void Update()
+		/*private void Update()
 		{
 			timeSinceLastPress += Time.deltaTime;
 
@@ -131,7 +131,7 @@ namespace DunGen.Demo
 
 			if (Input.GetKeyDown(KeyCode.F1))
 				showStats = !showStats;
-		}
+		}*/
 
 		private void OnGUI()
 		{
